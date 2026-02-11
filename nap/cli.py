@@ -156,15 +156,17 @@ def print_data_info(summary: dict):
 def _extract_subject_id(data_path: Path) -> str:
     """Extract subject ID from data path. Falls back to filename stem."""
     EEG_EXTENSIONS = {".vhdr", ".edf", ".bdf", ".fif", ".set", ".eeg", ".vmrk", ".fdt"}
+
+    def _strip_extensions(name: str) -> str:
+        while Path(name).suffix.lower() in EEG_EXTENSIONS:
+            name = Path(name).stem
+        return name
+
     # Check parent directories for sub-XXXX pattern
     for part in data_path.parts:
         if part.startswith("sub-"):
-            return part
-    # Strip all known extensions from stem
-    name = data_path.name
-    while Path(name).suffix.lower() in EEG_EXTENSIONS:
-        name = Path(name).stem
-    return name
+            return _strip_extensions(part)
+    return _strip_extensions(data_path.name)
 
 
 def main():
