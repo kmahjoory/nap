@@ -1,13 +1,18 @@
-# NAP — Neuroimaging Agentic Processing
+# NAP — Neuroimaging Agentic Analysis Platform
 
 LLM-powered agent for automated EEG/MEG preprocessing with visual inspection.
 
-## Setup
+## Install
+
+Requires Python 3.10+ and git.
 
 ```bash
-uv venv .venv --python 3.12
+mkdir <ProjectFolder>
+cd <ProjectFolder>
+python -m venv .venv  # Python 3.10+
 source .venv/bin/activate
-uv pip install -e .
+pip install git+https://github.com/kmahjoory/nap.git
+# All dependencies are installed automatically
 ```
 
 ## Usage
@@ -15,10 +20,16 @@ uv pip install -e .
 ```bash
 # With Claude API
 export ANTHROPIC_API_KEY='your-key'
-python -m nap.cli --project /path/to/output --data /path/to/raw.vhdr
+nap --project ./output --data /path/to/eeg/
 
 # Without API key (simulated LLM responses)
-python -m nap.cli --mock --project /path/to/output --data /path/to/raw.vhdr
+nap --mock --project ./output --data /path/to/eeg/
+
+# Detailed output
+nap --verbose --project ./output --data /path/to/eeg/
+
+# Interactive mode (prompts for input)
+nap --interactive --project ./output --data /path/to/eeg/
 ```
 
 Supported formats: `.vhdr`, `.edf`, `.bdf`, `.fif`, `.set`
