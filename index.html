@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAP — Neuroimaging Agentic Analysis Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #ffffff;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px 60px;
+        }
+
+        .logo svg {
+            width: 180px;
+            height: 180px;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #649471;
+            margin-top: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: #95A098;
+            margin-top: 8px;
+            font-weight: 400;
+        }
+
+        .version {
+            font-size: 0.85rem;
+            color: #95A098;
+            margin-top: 4px;
+        }
+
+        .tagline {
+            max-width: 620px;
+            margin: 32px auto 0;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 32px;
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 24px;
+        }
+
+        .feature {
+            background: #f9fbf9;
+            border: 1px solid #e4ebe6;
+            border-radius: 12px;
+            padding: 28px 24px;
+        }
+
+        .feature h3 {
+            color: #649471;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .install {
+            max-width: 640px;
+            margin: 0 auto 60px;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .install h2 {
+            color: #649471;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .code-block {
+            background: #2c2c2c;
+            color: #e0e0e0;
+            border-radius: 10px;
+            padding: 24px 28px;
+            text-align: left;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .code-block .comment {
+            color: #95A098;
+        }
+
+        .code-block .cmd {
+            color: #a0d4b0;
+        }
+
+        .how-it-works {
+            max-width: 720px;
+            margin: 0 auto 60px;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .how-it-works h2 {
+            color: #649471;
+            font-size: 1.5rem;
+            margin-bottom: 28px;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            background: #649471;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .step-text {
+            padding-top: 4px;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .step-text strong {
+            color: #2c2c2c;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #e4ebe6;
+            color: #95A098;
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: #649471;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<section class="hero">
+    <div class="logo">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background circle -->
+            <circle cx="100" cy="100" r="96" fill="#f9fbf9" stroke="#649471" stroke-width="2.5"/>
+            <!-- NAP letters -->
+            <text x="100" y="118" text-anchor="middle" font-family="'SF Mono', 'Fira Code', 'Consolas', monospace" font-size="62" font-weight="700" fill="#649471" letter-spacing="-2">NAP</text>
+            <!-- Small brainwave decoration -->
+            <path d="M 50 148 Q 62 138, 74 148 Q 86 158, 98 148 Q 110 138, 122 148 Q 134 158, 146 148" fill="none" stroke="#95A098" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </div>
+    <h1>NAP</h1>
+    <p class="subtitle">Neuroimaging Agentic Analysis Platform</p>
+    <p class="version">Prototype v0.1.0</p>
+    <p class="tagline">An LLM-powered agent that autonomously preprocesses EEG/MEG data through visual inspection and intelligent artifact rejection.</p>
+</section>
+
+<section class="features">
+    <div class="feature">
+        <h3>Visual Inspection</h3>
+        <p>Generates diagnostic plots and sends them to a multimodal LLM for analysis. The agent sees what a researcher sees.</p>
+    </div>
+    <div class="feature">
+        <h3>Autonomous Processing</h3>
+        <p>Iterative artifact rejection loop: the agent proposes actions, executes them, evaluates results, and repeats until clean.</p>
+    </div>
+    <div class="feature">
+        <h3>Read-Only Safety</h3>
+        <p>Raw data is never modified. All work happens on in-memory copies. Outputs go to a separate project folder.</p>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-text"><strong>Organize</strong> — Point NAP at a data folder. It scans, classifies files, and creates a structured workspace with symlinks.</div>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-text"><strong>Inspect</strong> — Generates PSD and trace plots. The LLM examines them to identify bad channels, segments, and line noise.</div>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-text"><strong>Plan</strong> — Based on visual findings, the agent proposes a preprocessing plan and saves it for review.</div>
+        </div>
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-text"><strong>Clean</strong> — Autonomous artifact rejection: ICA, channel removal, segment annotation, notch filtering — iterating until done.</div>
+        </div>
+        <div class="step">
+            <div class="step-number">5</div>
+            <div class="step-text"><strong>Report</strong> — Every decision is logged. A full report is saved for researcher review.</div>
+        </div>
+    </div>
+</section>
+
+<section class="install">
+    <h2>Get Started</h2>
+    <div class="code-block">
+        <span class="comment"># Install</span><br>
+        <span class="cmd">pip install git+https://github.com/kmahjoory/nap.git</span><br><br>
+        <span class="comment"># Run</span><br>
+        <span class="cmd">export ANTHROPIC_API_KEY='your-key'</span><br>
+        <span class="cmd">nap --project ./output --data /path/to/eeg/</span><br><br>
+        <span class="comment"># Without API key (mock mode)</span><br>
+        <span class="cmd">nap --mock --project ./output --data /path/to/eeg/</span>
+    </div>
+</section>
+
+<footer>
+    <p><a href="https://github.com/kmahjoory/nap">GitHub</a></p>
+</footer>
+
+</body>
+</html>
