@@ -141,13 +141,22 @@
   }
 
   .hero-ascii {
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.6rem;
     animation: fadeUp 0.8s 0.1s ease both;
   }
 
-  .hero-ascii svg {
-    width: clamp(280px, 50vw, 480px);
-    height: auto;
+  .hero-ascii pre {
+    font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-size: clamp(0.65rem, 2.2vw, 1.25rem);
+    font-weight: normal;
+    line-height: 1.2;
+    color: var(--accent);
+    letter-spacing: 0;
+    font-variant-ligatures: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    display: inline-block;
   }
 
   .hero-ascii-sub {
@@ -518,17 +527,11 @@
     <span class="dot"></span>
     v0.1.0-alpha &mdash; Proof of Concept
   </div>
-  <div class="hero-ascii">
-    <svg viewBox="0 0 260 70" xmlns="http://www.w3.org/2000/svg">
-      <text font-family="'Courier New', Courier, monospace" font-weight="700" font-size="13" fill="#649471">
-        <tspan x="0" dy="0"> _   _    _    ____  </tspan>
-        <tspan x="0" dy="14">| \ | |  / \  |  _ \ </tspan>
-        <tspan x="0" dy="14">|  \| | / _ \ | |_) |</tspan>
-        <tspan x="0" dy="14">| |\  |/ ___ \|  __/ </tspan>
-        <tspan x="0" dy="14">|_| \_/_/   \_\_|    </tspan>
-      </text>
-    </svg>
-  </div>
+  <div class="hero-ascii"><pre>  _   _    _    ____
+ | \ | |  / \  |  _ \
+ |  \| | / _ \ | |_) |
+ | |\  |/ ___ \|  __/
+ |_| \_/_/   \_\_|</pre></div>
   <p class="hero-ascii-sub">Neuroimaging Agentic Analysis Platform</p>
   <p class="hero-sub">
     LLM-powered agent for automated EEG/MEG preprocessing with visual inspection. Let AI handle the pipeline while you focus on the science.
