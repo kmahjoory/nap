@@ -140,20 +140,25 @@
     animation: pulse 2s infinite;
   }
 
-  .hero h1 {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(3.5rem, 9vw, 7.5rem);
-    font-weight: 400;
-    line-height: 1;
-    letter-spacing: -0.025em;
-    color: var(--text);
-    margin-bottom: 1.8rem;
+  .hero-ascii {
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(1rem, 2.8vw, 1.6rem);
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--accent);
+    white-space: pre;
+    margin-bottom: 0.4rem;
     animation: fadeUp 0.8s 0.1s ease both;
   }
 
-  .hero h1 em {
-    font-style: italic;
-    color: var(--accent);
+  .hero-ascii-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+    color: var(--text-dim);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.8rem;
+    animation: fadeUp 0.8s 0.15s ease both;
   }
 
   .hero-sub {
@@ -514,7 +519,12 @@
     <span class="dot"></span>
     v0.1.0-alpha &mdash; Proof of Concept
   </div>
-  <h1>N<em>A</em>P</h1>
+  <div class="hero-ascii"> _   _    _    ____
+| \ | |  / \  |  _ \
+|  \| | / _ \ | |_) |
+| |\  |/ ___ \|  __/
+|_| \_/_/   \_\_|</div>
+  <p class="hero-ascii-sub">Neuroimaging Agentic Analysis Platform</p>
   <p class="hero-sub">
     LLM-powered agent for automated EEG/MEG preprocessing with visual inspection. Let AI handle the pipeline while you focus on the science.
   </p>
