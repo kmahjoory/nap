@@ -65,8 +65,8 @@
 
   .nav-logo {
     font-family: 'DM Mono', monospace;
-    font-size: 1.15rem;
-    font-weight: 500;
+    font-size: 1.35rem;
+    font-weight: 700;
     letter-spacing: 0.15em;
     color: var(--text);
     text-decoration: none;
@@ -77,14 +77,15 @@
   .nav-links { display: flex; gap: 2rem; align-items: center; }
 
   .nav-links a {
-    font-size: 0.85rem;
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--text-dim);
     text-decoration: none;
     letter-spacing: 0.04em;
     transition: color 0.25s;
   }
 
-  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover { color: var(--accent); }
 
   .nav-gh {
     display: inline-flex;
@@ -93,14 +94,15 @@
     padding: 0.5rem 1.1rem;
     border: 1px solid var(--border);
     border-radius: 6px;
-    font-size: 0.82rem;
+    font-size: 0.95rem;
+    font-weight: 600;
     color: var(--text-dim) !important;
     transition: border-color 0.25s, color 0.25s;
   }
 
   .nav-gh:hover {
     border-color: var(--accent);
-    color: var(--text) !important;
+    color: var(--accent) !important;
   }
 
   .nav-gh svg { width: 16px; height: 16px; fill: currentColor; }
