@@ -1,265 +1,730 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAP — Neuroimaging Agentic Analysis Platform</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAP — Neuroimaging Agentic Analysis Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-card: #f6f9f7;
+    --bg-card-hover: #eef3ef;
+    --border: #dce5de;
+    --border-accent: #649471;
+    --text: #2c2c2c;
+    --text-dim: #95A098;
+    --text-muted: #b5bdb7;
+    --accent: #649471;
+    --accent-soft: #7aaa88;
+    --accent-glow: rgba(100, 148, 113, 0.12);
+    --green-light: #a0c4aa;
+    --green-light-soft: rgba(100, 148, 113, 0.08);
+    --warm: #8a7a5a;
+    --warm-soft: rgba(138, 122, 90, 0.10);
+    --slate: #6a7a8a;
+    --slate-soft: rgba(106, 122, 138, 0.10);
+  }
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #ffffff;
-            color: #2c2c2c;
-            line-height: 1.6;
-        }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .hero {
-            text-align: center;
-            padding: 80px 20px 60px;
-        }
+  html { scroll-behavior: smooth; }
 
-        .logo svg {
-            width: 180px;
-            height: 180px;
-        }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
 
-        h1 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            color: #649471;
-            margin-top: 24px;
-            letter-spacing: -0.5px;
-        }
+  /* === CANVAS BACKGROUND === */
+  #neural-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+  }
 
-        .subtitle {
-            font-size: 1.15rem;
-            color: #95A098;
-            margin-top: 8px;
-            font-weight: 400;
-        }
+  /* === NAVIGATION === */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+  }
 
-        .version {
-            font-size: 0.85rem;
-            color: #95A098;
-            margin-top: 4px;
-        }
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: var(--text);
+    text-decoration: none;
+  }
 
-        .tagline {
-            max-width: 620px;
-            margin: 32px auto 0;
-            font-size: 1.1rem;
-            color: #555;
-        }
+  .nav-logo span { color: var(--accent); }
 
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 32px;
-            max-width: 900px;
-            margin: 60px auto;
-            padding: 0 24px;
-        }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
 
-        .feature {
-            background: #f9fbf9;
-            border: 1px solid #e4ebe6;
-            border-radius: 12px;
-            padding: 28px 24px;
-        }
+  .nav-links a {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.25s;
+  }
 
-        .feature h3 {
-            color: #649471;
-            font-size: 1.05rem;
-            margin-bottom: 8px;
-        }
+  .nav-links a:hover { color: var(--text); }
 
-        .feature p {
-            color: #666;
-            font-size: 0.95rem;
-        }
+  .nav-gh {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: var(--text-dim) !important;
+    transition: border-color 0.25s, color 0.25s;
+  }
 
-        .install {
-            max-width: 640px;
-            margin: 0 auto 60px;
-            padding: 0 24px;
-            text-align: center;
-        }
+  .nav-gh:hover {
+    border-color: var(--accent);
+    color: var(--text) !important;
+  }
 
-        .install h2 {
-            color: #649471;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
+  .nav-gh svg { width: 16px; height: 16px; fill: currentColor; }
 
-        .code-block {
-            background: #2c2c2c;
-            color: #e0e0e0;
-            border-radius: 10px;
-            padding: 24px 28px;
-            text-align: left;
-            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-            font-size: 0.9rem;
-            line-height: 1.7;
-            overflow-x: auto;
-        }
+  /* === HERO === */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8rem 2rem 5rem;
+  }
 
-        .code-block .comment {
-            color: #95A098;
-        }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.8s ease both;
+  }
 
-        .code-block .cmd {
-            color: #a0d4b0;
-        }
+  .hero-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
 
-        .how-it-works {
-            max-width: 720px;
-            margin: 0 auto 60px;
-            padding: 0 24px;
-            text-align: center;
-        }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(3.5rem, 9vw, 7.5rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--text);
+    margin-bottom: 1.8rem;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
 
-        .how-it-works h2 {
-            color: #649471;
-            font-size: 1.5rem;
-            margin-bottom: 28px;
-        }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
 
-        .steps {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            text-align: left;
-        }
+  .hero-sub {
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
+    color: var(--text-dim);
+    max-width: 560px;
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 3rem;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
 
-        .step {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-        }
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
 
-        .step-number {
-            flex-shrink: 0;
-            width: 32px;
-            height: 32px;
-            background: #649471;
-            color: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 2rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.25s;
+  }
 
-        .step-text {
-            padding-top: 4px;
-            color: #555;
-            font-size: 0.95rem;
-        }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(100, 148, 113, 0.3);
+  }
 
-        .step-text strong {
-            color: #2c2c2c;
-        }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 2rem;
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.25s, color 0.25s;
+  }
 
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid #e4ebe6;
-            color: #95A098;
-            font-size: 0.85rem;
-        }
+  .btn-secondary:hover {
+    border-color: var(--accent-soft);
+    color: var(--text);
+  }
 
-        footer a {
-            color: #649471;
-            text-decoration: none;
-        }
+  /* === SECTIONS === */
+  section {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
 
-        footer a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 1.2rem;
+  }
+
+  .section-desc {
+    font-size: 1.05rem;
+    color: var(--text-dim);
+    max-width: 550px;
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 3.5rem;
+  }
+
+  /* === FEATURES GRID === */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+
+  .feature-card {
+    padding: 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.3s, background 0.3s, transform 0.3s;
+  }
+
+  .feature-card:hover {
+    border-color: var(--border-accent);
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+  }
+
+  .feature-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.3rem;
+    font-size: 1.15rem;
+  }
+
+  .fi-green { background: var(--accent-glow); color: var(--accent); }
+  .fi-green-light { background: var(--green-light-soft); color: var(--green-light); }
+  .fi-warm { background: var(--warm-soft); color: var(--warm); }
+  .fi-slate { background: var(--slate-soft); color: var(--slate); }
+
+  .feature-card h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+  }
+
+  .feature-card p {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* === CODE BLOCKS === */
+  .install-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .install-info { padding-top: 0.5rem; }
+
+  .code-block {
+    background: #1e2420;
+    border: 1px solid #2a332c;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    border-bottom: 1px solid #2a332c;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: #667a6c;
+    letter-spacing: 0.05em;
+  }
+
+  .code-header .dot-row {
+    display: flex; gap: 5px; margin-right: 0.8rem;
+  }
+
+  .code-header .dot-row span {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #2a332c;
+  }
+
+  .code-body {
+    padding: 1.3rem 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.9;
+    color: #95A098;
+    overflow-x: auto;
+  }
+
+  .code-body .cmd { color: #a0d4b0; }
+  .code-body .flag { color: #649471; }
+  .code-body .comment { color: #556b5a; }
+  .code-body .string { color: #c4b78a; }
+
+  /* === FORMATS === */
+  .formats-row {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  .format-tag {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    transition: border-color 0.2s;
+  }
+
+  .format-tag:hover {
+    border-color: var(--accent-soft);
+  }
+
+  /* === HOW IT WORKS === */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    counter-reset: step;
+  }
+
+  .step {
+    position: relative;
+    padding: 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    counter-increment: step;
+  }
+
+  .step::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: 'Instrument Serif', serif;
+    font-size: 2.5rem;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .step h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .step p {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* === CTA === */
+  .cta-section {
+    text-align: center;
+    padding: 8rem 2rem;
+  }
+
+  .cta-section .section-title {
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-section .section-desc {
+    margin: 0 auto 2.5rem;
+  }
+
+  /* === FOOTER === */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 2.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  footer a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  footer a:hover { color: var(--accent); }
+
+  /* === ANIMATIONS === */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links a:not(.nav-gh) { display: none; }
+    .features-grid, .steps { grid-template-columns: 1fr; }
+    .install-section { grid-template-columns: 1fr; }
+    section { padding: 4rem 1.5rem; }
+  }
+
+  @media (max-width: 480px) {
+    .hero { padding: 7rem 1.2rem 4rem; }
+    .hero-actions { flex-direction: column; width: 100%; }
+    .hero-actions a { width: 100%; justify-content: center; }
+  }
+</style>
 </head>
 <body>
 
+<!-- Neural network animated background -->
+<canvas id="neural-canvas"></canvas>
+
+<!-- Navigation -->
+<nav>
+  <a href="#" class="nav-logo"><span>N</span>AP</a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#install">Install</a>
+    <a href="#how-it-works">How it works</a>
+    <a href="https://github.com/kmahjoory/nap" target="_blank" class="nav-gh">
+      <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      GitHub
+    </a>
+  </div>
+</nav>
+
+<!-- Hero -->
 <section class="hero">
-    <div class="logo">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <!-- Background circle -->
-            <circle cx="100" cy="100" r="96" fill="#f9fbf9" stroke="#649471" stroke-width="2.5"/>
-            <!-- NAP letters -->
-            <text x="100" y="118" text-anchor="middle" font-family="'SF Mono', 'Fira Code', 'Consolas', monospace" font-size="62" font-weight="700" fill="#649471" letter-spacing="-2">NAP</text>
-            <!-- Small brainwave decoration -->
-            <path d="M 50 148 Q 62 138, 74 148 Q 86 158, 98 148 Q 110 138, 122 148 Q 134 158, 146 148" fill="none" stroke="#95A098" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-    </div>
-    <h1>NAP</h1>
-    <p class="subtitle">Neuroimaging Agentic Analysis Platform</p>
-    <p class="version">Prototype v0.1.0</p>
-    <p class="tagline">An LLM-powered agent that autonomously preprocesses EEG/MEG data through visual inspection and intelligent artifact rejection.</p>
+  <div class="hero-badge">
+    <span class="dot"></span>
+    v0.1.0-alpha &mdash; Proof of Concept
+  </div>
+  <h1>N<em>A</em>P</h1>
+  <p class="hero-sub">
+    LLM-powered agent for automated EEG/MEG preprocessing with visual inspection. Let AI handle the pipeline while you focus on the science.
+  </p>
+  <div class="hero-actions">
+    <a href="#install" class="btn-primary">Get Started</a>
+    <a href="https://github.com/kmahjoory/nap" target="_blank" class="btn-secondary">View on GitHub</a>
+  </div>
 </section>
 
-<section class="features">
-    <div class="feature">
-        <h3>Visual Inspection</h3>
-        <p>Generates diagnostic plots and sends them to a multimodal LLM for analysis. The agent sees what a researcher sees.</p>
+<!-- Features -->
+<section id="features">
+  <div class="reveal">
+    <p class="section-label">Capabilities</p>
+    <h2 class="section-title">Intelligent preprocessing,<br>zero boilerplate</h2>
+    <p class="section-desc">NAP uses Claude to autonomously reason about your neuroimaging data, make preprocessing decisions, and produce publication-ready results.</p>
+  </div>
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <div class="feature-icon fi-green">&#x1f9e0;</div>
+      <h3>Agentic Analysis</h3>
+      <p>An LLM agent reasons about your data, selects appropriate preprocessing steps, and adapts the pipeline to your specific recordings.</p>
     </div>
-    <div class="feature">
-        <h3>Autonomous Processing</h3>
-        <p>Iterative artifact rejection loop: the agent proposes actions, executes them, evaluates results, and repeats until clean.</p>
+    <div class="feature-card">
+      <div class="feature-icon fi-slate">&#x1f441;</div>
+      <h3>Visual Inspection</h3>
+      <p>Automated generation of quality control plots so you can verify every decision the agent makes — trust, but verify.</p>
     </div>
-    <div class="feature">
-        <h3>Read-Only Safety</h3>
-        <p>Raw data is never modified. All work happens on in-memory copies. Outputs go to a separate project folder.</p>
+    <div class="feature-card">
+      <div class="feature-icon fi-warm">&#x1f512;</div>
+      <h3>Non-destructive</h3>
+      <p>Raw data is never modified. All outputs and intermediate results are cleanly organized in your project folder.</p>
     </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-green-light">&#x26a1;</div>
+      <h3>Multi-format Support</h3>
+      <p>Works with BrainVision, EDF, BDF, FIFF, and EEGLAB formats out of the box — no conversion needed.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-slate">&#x1f916;</div>
+      <h3>Mock Mode</h3>
+      <p>Test the full pipeline without an API key using simulated LLM responses — perfect for evaluation and development.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-green">&#x1f4ac;</div>
+      <h3>Interactive Mode</h3>
+      <p>Guide the agent step by step with interactive prompts, maintaining full control over preprocessing decisions.</p>
+    </div>
+  </div>
 </section>
 
-<section class="how-it-works">
-    <h2>How It Works</h2>
-    <div class="steps">
-        <div class="step">
-            <div class="step-number">1</div>
-            <div class="step-text"><strong>Organize</strong> — Point NAP at a data folder. It scans, classifies files, and creates a structured workspace with symlinks.</div>
-        </div>
-        <div class="step">
-            <div class="step-number">2</div>
-            <div class="step-text"><strong>Inspect</strong> — Generates PSD and trace plots. The LLM examines them to identify bad channels, segments, and line noise.</div>
-        </div>
-        <div class="step">
-            <div class="step-number">3</div>
-            <div class="step-text"><strong>Plan</strong> — Based on visual findings, the agent proposes a preprocessing plan and saves it for review.</div>
-        </div>
-        <div class="step">
-            <div class="step-number">4</div>
-            <div class="step-text"><strong>Clean</strong> — Autonomous artifact rejection: ICA, channel removal, segment annotation, notch filtering — iterating until done.</div>
-        </div>
-        <div class="step">
-            <div class="step-number">5</div>
-            <div class="step-text"><strong>Report</strong> — Every decision is logged. A full report is saved for researcher review.</div>
-        </div>
+<!-- Install -->
+<section id="install">
+  <div class="install-section reveal">
+    <div class="install-info">
+      <p class="section-label">Quick Start</p>
+      <h2 class="section-title">Up and running in under a minute</h2>
+      <p class="section-desc">Requires Python 3.10+ and git. All dependencies are installed automatically.</p>
+      <div class="formats-row">
+        <span class="format-tag">.vhdr</span>
+        <span class="format-tag">.edf</span>
+        <span class="format-tag">.bdf</span>
+        <span class="format-tag">.fif</span>
+        <span class="format-tag">.set</span>
+      </div>
     </div>
+    <div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="dot-row"><span></span><span></span><span></span></div>
+          terminal
+        </div>
+        <div class="code-body">
+          <span class="comment"># create a virtual environment</span><br>
+          <span class="cmd">mkdir</span> MyProject && <span class="cmd">cd</span> MyProject<br>
+          <span class="cmd">python</span> <span class="flag">-m</span> venv .venv<br>
+          <span class="cmd">source</span> .venv/bin/activate<br><br>
+          <span class="comment"># install NAP</span><br>
+          <span class="cmd">pip</span> install git+https://github.com/kmahjoory/nap.git<br><br>
+          <span class="comment"># set your API key</span><br>
+          <span class="cmd">export</span> ANTHROPIC_API_KEY=<span class="string">'your-key'</span><br><br>
+          <span class="comment"># run</span><br>
+          <span class="cmd">nap</span> <span class="flag">--project</span> ./output <span class="flag">--data</span> /path/to/eeg/
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="install">
-    <h2>Get Started</h2>
-    <div class="code-block">
-        <span class="comment"># Install</span><br>
-        <span class="cmd">pip install git+https://github.com/kmahjoory/nap.git</span><br><br>
-        <span class="comment"># Run</span><br>
-        <span class="cmd">export ANTHROPIC_API_KEY='your-key'</span><br>
-        <span class="cmd">nap --project ./output --data /path/to/eeg/</span><br><br>
-        <span class="comment"># Without API key (mock mode)</span><br>
-        <span class="cmd">nap --mock --project ./output --data /path/to/eeg/</span>
+<!-- How it works -->
+<section id="how-it-works">
+  <div class="reveal">
+    <p class="section-label">Workflow</p>
+    <h2 class="section-title">How it works</h2>
+    <p class="section-desc">NAP orchestrates the entire preprocessing pipeline through an intelligent agent loop.</p>
+  </div>
+  <div class="steps reveal">
+    <div class="step">
+      <h3>Point to your data</h3>
+      <p>Provide a path to your raw EEG/MEG recordings and a project directory for outputs. NAP auto-detects the format.</p>
     </div>
+    <div class="step">
+      <h3>Agent reasons & acts</h3>
+      <p>The LLM agent inspects your data, selects preprocessing steps (filtering, artifact rejection, ICA, etc.), and executes them.</p>
+    </div>
+    <div class="step">
+      <h3>Review & iterate</h3>
+      <p>Quality control plots are generated at each stage. Use interactive mode to guide decisions or let the agent run autonomously.</p>
+    </div>
+  </div>
 </section>
 
+<!-- CTA -->
+<section class="cta-section">
+  <div class="reveal">
+    <p class="section-label">Open Source &mdash; MIT License</p>
+    <h2 class="section-title">Ready to automate<br>your preprocessing?</h2>
+    <p class="section-desc">NAP is free, open source, and designed to save you hours of manual pipeline work.</p>
+    <div class="hero-actions">
+      <a href="https://github.com/kmahjoory/nap" target="_blank" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        Star on GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
 <footer>
-    <p><a href="https://github.com/kmahjoory/nap">GitHub</a></p>
+  <p>NAP — Neuroimaging Agentic Analysis Platform &nbsp;&middot;&nbsp; <a href="https://github.com/kmahjoory/nap/blob/main/LICENSE" target="_blank">MIT License</a> &nbsp;&middot;&nbsp; Built by <a href="https://github.com/kmahjoory" target="_blank">kmahjoory</a></p>
 </footer>
+
+<script>
+// === Neural network canvas animation ===
+const canvas = document.getElementById('neural-canvas');
+const ctx = canvas.getContext('2d');
+let nodes = [];
+let w, h;
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+
+function initNodes() {
+  const count = Math.min(Math.floor((w * h) / 18000), 80);
+  nodes = [];
+  for (let i = 0; i < count; i++) {
+    nodes.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      r: Math.random() * 1.8 + 0.6,
+    });
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, w, h);
+
+  // Draw connections
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 160) {
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.strokeStyle = `rgba(100, 148, 113, ${0.12 * (1 - dist / 160)})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Draw nodes
+  for (const n of nodes) {
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(100, 148, 113, 0.35)';
+    ctx.fill();
+
+    n.x += n.vx;
+    n.y += n.vy;
+    if (n.x < 0 || n.x > w) n.vx *= -1;
+    if (n.y < 0 || n.y > h) n.vy *= -1;
+  }
+
+  requestAnimationFrame(draw);
+}
+
+window.addEventListener('resize', () => { resize(); initNodes(); });
+resize();
+initNodes();
+draw();
+
+// === Scroll reveal ===
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15 });
+
+reveals.forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
